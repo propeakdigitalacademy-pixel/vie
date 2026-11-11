@@ -1,0 +1,15 @@
+{
+  "maxRequests": 5,
+  "sampling": { "mode": "scene", "maxFrames": 3 },
+  "vision": {
+    "policy": "local-only",
+    "providers": [
+      {
+        "adapter": "ollama",
+        "model": "REPLACE_WITH_AN_INSTALLED_VISION_MODEL",
+        "structured": true
+      }
+    ]
+  },
+  "transcription": { "policy": "disabled" }
+}

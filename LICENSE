@@ -1,0 +1,34 @@
+VIE Engine — Owner Authorization License
+
+All rights reserved by the copyright owner.
+
+1. Owner authorization
+No permission is granted to clone, mirror, copy, reproduce, redistribute,
+publish, sublicense or create derivative copies of this project's source
+code or repository, in whole or in part, without the copyright owner's
+explicit prior written authorization.
+
+2. Owner-authorized npm distribution
+When the copyright owner authorizes distribution of this software through
+npm, recipients of that authorized distribution may download, install and
+execute the unmodified distributed package in their applications. Copies
+strictly necessary for that installation and execution are permitted.
+This limited permission does not authorize cloning the source repository,
+redistributing the package or source, publishing a competing copy, or
+representing the software as the recipient's own work. Any additional
+rights require the owner's explicit prior written authorization.
+
+3. Notices
+Authorized copies must preserve this license and applicable ownership
+notices. No trademark rights are granted.
+
+4. Warranty and liability
+To the extent permitted by applicable law, the software is provided
+"AS IS", without warranty of any kind, express or implied, including
+merchantability, fitness for a particular purpose and noninfringement.
+The owner is not liable for claims, damages or other liability arising
+from the software or its use, except where applicable law forbids that
+limitation.
+
+This is a proprietary license, not an open-source license. Downloadability
+or visibility of the software does not grant rights beyond these terms.

@@ -1,0 +1,78 @@
+{
+  "name": "vie-engine",
+  "version": "0.1.0-alpha.1",
+  "description": "Local-first evidence-backed video intelligence SDK and CLI",
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public",
+    "tag": "alpha"
+  },
+  "engines": {
+    "node": ">=20.3"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "bin": {
+    "vie": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "video",
+    "ffmpeg",
+    "transcription",
+    "vision",
+    "evidence"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests scripts",
+    "format": "prettier --write src tests scripts examples *.json *.md",
+    "format:check": "prettier --check src tests scripts examples *.json *.md",
+    "test": "vitest run",
+    "evaluate": "tsx scripts/evaluate.ts",
+    "smoke": "node scripts/smoke.mjs",
+    "check": "npm run lockfile:check && npm run typecheck && npm run lint && npm test && npm run build && npm run smoke",
+    "lockfile:check": "node scripts/portable-lockfile.mjs",
+    "lockfile:portable": "node scripts/portable-lockfile.mjs --write",
+    "smoke:clone": "node scripts/clone-smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "prettier": "^3.9.10",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "ipaddr.js": "^2.5.0",
+    "undici": "^6.29.1",
+    "zod": "^4.6.7"
+  }
+}

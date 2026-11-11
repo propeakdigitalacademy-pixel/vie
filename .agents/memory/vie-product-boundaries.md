@@ -14,3 +14,15 @@ The user wants improvements beyond the master specification and a top-tier produ
 **Why:** The user explicitly requested substantial improvements and reliability beyond the supplied requirements; perfection cannot be guaranteed.
 
 **How to apply:** Prioritize measurable accuracy, evidence and provenance, honest limitations, and real working behavior over impressive unsupported claims.
+
+The user said: "just two .MD files is enough let readme explain everything how to use it and so on plus code snippets" and "qwen-nemotron.md file isn't needed".
+
+**Why:** The user asked to reduce the scattered project documentation.
+
+**How to apply:** Keep public project Markdown documentation to README.md and CHANGELOG.md. Put usage, configuration and code snippets in the README, not separate topic pages.
+
+The user's license requirement is that the project "must not be cloned except authorized by owner".
+
+**Why:** The user chose an owner-authorization restriction rather than an open-source license.
+
+**How to apply:** Preserve the owner-authorization terms and do not replace them with a permissive license. Do not claim public npm distribution can technically prevent copying.

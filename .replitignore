@@ -1,0 +1,4 @@
+/generated-artifacts/
+node_modules/
+.vie-cache/
+.env

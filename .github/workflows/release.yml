@@ -1,0 +1,47 @@
+name: Explicit npm release
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type PUBLISH to request publication
+        required: true
+      version:
+        description: Exact package version to publish
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: inputs.confirm == 'PUBLISH' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    # Maintainer must configure required reviewers on this environment.
+    environment: npm-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: node scripts/portable-lockfile.mjs
+      - run: npm ci
+      - name: Verify licensing, version and release channel
+        id: release
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: node scripts/release-gate.mjs
+      - name: Verify npm authentication without displaying the token
+        run: npm whoami --registry=https://registry.npmjs.org > /dev/null
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm run check
+      - run: npm run format:check
+      - run: npm pack --dry-run
+      - name: Publish only after explicit request and environment approval
+        run: npm publish --access public --tag "${{ steps.release.outputs.tag }}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
