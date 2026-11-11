@@ -19,8 +19,8 @@ export async function verifyPublished(
   } = {},
 ) {
   const fetcher = options.fetcher ?? fetch;
-  // npm/CDN negative-cache entries can persist for five minutes.
-  const attempts = options.attempts ?? 36;
+  // Allow publication propagation plus npm/CDN negative-cache expiry.
+  const attempts = options.attempts ?? 72;
   for (let attempt = 0; attempt < attempts; attempt++) {
     const response = await fetcher(
       `https://registry.npmjs.org/${encodeURIComponent(expected.name)}/${encodeURIComponent(expected.version)}?verify=${attempt}`,

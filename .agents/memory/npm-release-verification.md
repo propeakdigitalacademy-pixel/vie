@@ -5,7 +5,7 @@ description: Why VIE publication must be verified against registry metadata and 
 
 Do not report npm availability from a successful GitHub publish step alone. Verify the requested version, archive integrity, downloaded bytes, SDK imports, and CLI.
 
-**Why:** A successful release was initially followed by public registry responses exposing only a staging placeholder. Metadata appeared before a previously requested tarball URL stopped returning a cached 404; a cache-busted download and checksum verification established actual availability.
+**Why:** A successful release was initially followed by public registry responses exposing only a staging placeholder. Metadata appeared before a previously requested tarball URL stopped returning a cached 404; a cache-busted download and checksum verification established actual availability. Another release took longer than a six-minute verification window to become visible, then installed successfully by name.
 
 **How to apply:** Allow bounded registry propagation time and avoid reusing negatively cached probes. Distinguish workflow success, public metadata availability, and successful package installation. Never call a placeholder package the completed engine.
 
