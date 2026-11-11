@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-alpha.3 — 2026-11-11
+
+- Derive the CLI version from the installed package manifest instead of a
+  hard-coded prerelease, and verify it in the clean-install smoke test.
+- Include the bounded metadata/tarball propagation handling in release checks.
+
 ## 0.1.0-alpha.2 — 2026-11-11
 
 - Publish the exact tested archive and require public-registry version, checksum,

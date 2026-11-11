@@ -90,6 +90,13 @@ try {
     [join(dir, "node_modules", "vie-engine", "dist", "cli.js"), "--help"],
     dir,
   );
+  const cliVersion = command(
+    process.execPath,
+    [join(dir, "node_modules", "vie-engine", "dist", "cli.js"), "--version"],
+    dir,
+  ).trim();
+  if (cliVersion !== packed.version)
+    throw new Error("Installed CLI version differs from the published package");
   // Call the installed executable shim as well as the JS entry.
   command(
     process.platform === "win32"

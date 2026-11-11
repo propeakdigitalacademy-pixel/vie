@@ -10,10 +10,13 @@ import {
   type ModelManifest,
 } from "./local/models.js";
 import { loadConfig } from "./cli-config.js";
+const { version } = JSON.parse(
+  await readFile(new URL("../package.json", import.meta.url), "utf8"),
+);
 const program = new Command()
   .name("vie")
   .description("Local-first video evidence extraction")
-  .version("0.1.0-alpha.1");
+  .version(version);
 program
   .option("-c, --config <path>", "JSON configuration")
   .option("--json", "machine-readable output")
