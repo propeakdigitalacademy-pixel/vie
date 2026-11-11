@@ -50,6 +50,17 @@ describe("public npm release verification", () => {
       verifyPublished(expected, { fetcher, attempts: 2, delayMs: 0 }),
     ).resolves.toMatchObject({ verified: true });
   });
+  it("tolerates a temporarily unavailable tarball without trusting metadata alone", async () => {
+    const fetcher = vi.fn<typeof fetch>();
+    fetcher.mockResolvedValueOnce(Response.json(metadata));
+    fetcher.mockResolvedValueOnce(new Response("", { status: 404 }));
+    fetcher.mockResolvedValueOnce(Response.json(metadata));
+    fetcher.mockResolvedValueOnce(new Response(bytes));
+    await expect(
+      verifyPublished(expected, { fetcher, attempts: 2, delayMs: 0 }),
+    ).resolves.toMatchObject({ verified: true });
+    expect(String(fetcher.mock.calls[1]![0])).toContain("?verify=");
+  });
   it.each([
     { ...metadata, version: "0.0.0-stage" },
     { ...metadata, dist: { ...metadata.dist, integrity: "sha512-different" } },

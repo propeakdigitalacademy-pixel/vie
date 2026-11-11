@@ -2,7 +2,7 @@
 
 Standalone, local-first **Video Intelligence Engine** for Node.js: extract video metadata, audio, scenes, timestamped frames, transcripts and visual evidence without an editor, database or mandatory reasoning model.
 
-**Status:** alpha. Native processing is verified with real FFmpeg media. Provider contracts have deterministic tests; live model accuracy and shared-service availability are not guaranteed. Nothing has been published by this task copy.
+**Status:** alpha. Native processing is verified with real FFmpeg media. Provider contracts have deterministic tests; live model accuracy and shared-service availability are not guaranteed. Published prereleases are available through `npm install vie-engine@alpha`; consult npm for the current public version.
 
 ## Contents
 

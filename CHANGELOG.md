@@ -1,12 +1,13 @@
 # Changelog
 
-## 0.1.0-alpha.2 — release candidate
+## 0.1.0-alpha.2 — 2026-11-11
 
 - Publish the exact tested archive and require public-registry version, checksum,
   and downloaded-byte verification before reporting a successful release.
 - Avoid duplicate cross-platform check runs for release tags.
+- Allow bounded public-registry propagation and negatively cached tarball retries.
 
-## 0.1.0-alpha.1 — unreleased
+## 0.1.0-alpha.1 — 2026-11-11
 
 - Added Gemini and Anthropic vision adapters with inline media, structured output, and explicit model selection.
 - Added opt-in timestamped multi-frame activity inference for OpenAI, Ollama, Gemini, and Anthropic, with single-still and evidence safeguards.
@@ -29,4 +30,7 @@
 - Included LICENSE in package contents and prepared manual npm publication using the repository's NPM_TOKEN secret.
 - Kept prerelease publication separate from the latest tag and stable-release approval.
 
-Not published by this task copy. npm publishing permission, service compatibility and live semantic accuracy still require actual verification; source authorization does not technically prevent copying a publicly downloadable npm package.
+Version 0.1.0-alpha.1 was published and its public archive, checksum, SDK imports,
+and CLI verified. Service compatibility and live semantic accuracy still require
+actual verification; source authorization does not technically prevent copying a
+publicly downloadable npm package.

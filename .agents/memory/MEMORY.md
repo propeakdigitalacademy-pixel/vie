@@ -1,3 +1,4 @@
 - [VIE product boundaries](vie-product-boundaries.md) — standalone video-intelligence library; evidence extraction, not an editor or mandatory reasoning service.
 - [Multimedia timestamps](media-timestamps.md) — FFprobe rejects scientific-notation intervals; negative source offsets need explicit decimal formatting.
 - [Dependency portability](dependency-portability.md) — managed installs may record internal mirror URLs; verify public URLs and a fresh-cache checkout before external CI.
+- [npm release verification](npm-release-verification.md) — verify public package bytes, not just workflow success; allow bounded registry propagation.
