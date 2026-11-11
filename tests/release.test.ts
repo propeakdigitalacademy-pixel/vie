@@ -12,6 +12,7 @@ async function check(
     stable?: boolean;
     license?: string;
     private?: boolean;
+    event?: string;
   } = {},
 ) {
   const dir = await mkdtemp(join(tmpdir(), "vie-release-"));
@@ -44,6 +45,7 @@ async function check(
       env: {
         ...process.env,
         REQUESTED_VERSION: options.requested ?? version,
+        RELEASE_EVENT: options.event ?? "workflow_dispatch",
         GITHUB_OUTPUT: output,
       },
     });
@@ -67,6 +69,15 @@ describe("owner-approved release preparation without publication", () => {
     const stable = await check({ version: "1.0.0", stable: true });
     expect(stable.status).toBe(0);
     expect(stable.workflowOutput).toBe("tag=latest\n");
+  });
+  it("accepts an exact version tag but rejects mismatched release tags", async () => {
+    expect(
+      (await check({ event: "push", requested: "v0.1.0-alpha.1" })).status,
+    ).toBe(0);
+    expect(
+      (await check({ event: "push", requested: "v0.2.0" })).status,
+    ).not.toBe(0);
+    expect((await check({ requested: "v0.1.0-alpha.1" })).status).not.toBe(0);
   });
   it.each([
     { approved: false },

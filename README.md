@@ -213,7 +213,45 @@ const speech = await vie.getTranscript("./video.mp4");
 console.log(speech.status, speech.transcript, speech.warnings);
 ```
 
-Deepgram, AssemblyAI, Gemini and Anthropic are not advertised as built-in integrations in this alpha. Use tested custom endpoints/plugins for additional services.
+Gemini and Anthropic vision adapters are also available as `geminiVision()` and
+`anthropicVision()`. They send inline JPEG data with header authentication, so
+private frames do not need public URLs. Select a model explicitly; response-format
+support and accuracy depend on that model. CLI adapter names are `gemini` and
+`anthropic`. Deepgram and AssemblyAI can be integrated with custom endpoints/plugins.
+
+### Ordered-frame activity analysis
+
+OpenAI, Ollama, Gemini and Anthropic adapters support an explicit `temporal: true`
+option for models capable of comparing images in order. This enables structured
+responses and declares activity support. Also set `actions: true` on VIE. The
+pipeline then supplies batches of up to four ordered frames within each scene;
+every accepted activity must cite at least two distinct frame timestamps.
+
+```js
+import { VIE, geminiVision } from "vie-engine";
+
+const vie = new VIE({
+  actions: true,
+  sampling: { mode: "adaptive", interval: 1, maxFrames: 120 },
+  vision: {
+    policy: "strict",
+    providers: [
+      geminiVision({
+        model: process.env.VISION_MODEL,
+        apiKey: process.env.GOOGLE_API_KEY,
+        temporal: true,
+      }),
+    ],
+  },
+});
+const result = await vie.analyze("./video.mp4");
+console.log(result.events, result.coverage.visualGaps);
+```
+
+Activities remain evidence-linked **inferences**, not proof of unseen motion.
+Enable temporal support only for a model you have validated. A single image never
+establishes movement, and all fallback providers must declare sequence support
+before the engine sends sequence batches.
 
 ## Custom endpoints and plugins
 
@@ -409,7 +447,7 @@ Search is lexical over available evidence, not hidden embedding/LLM reasoning. N
 
 Descriptions/objects/OCR are provider-reported observations. Classification and accepted multi-frame activities are marked inference. Confidence is absent unless supplied and is not a calibrated accuracy guarantee.
 
-Single stills cannot establish movement. Activities require an explicitly temporal-capable plugin and at least two distinct referenced frame timestamps. Built-in image adapters do not claim action recognition or persistent object identity tracking.
+Single stills cannot establish movement. Activities require an explicitly temporal-capable provider and at least two distinct referenced frame timestamps. Built-in adapters support opt-in ordered-frame comparisons, not continuous motion recognition or persistent object identity tracking.
 
 ## CLI
 
@@ -523,16 +561,16 @@ Without a provider, OCR and unsupported semantic-claim rates remain unmeasured/n
 
 Verification distinctions:
 
-| Area               | Actual evidence                                                                   |
-| ------------------ | --------------------------------------------------------------------------------- |
-| Native processing  | Real FFmpeg/FFprobe media tests                                                   |
-| OpenAI contracts   | Mocked transport, not paid live accuracy                                          |
-| Ollama/whisper.cpp | Real loopback HTTP fixtures, not actual model inference                           |
-| Qwen/Nemotron      | Mocked contracts; live routes/schema require verification                         |
-| Model lifecycle    | Tiny controlled artifact with size/hash checks, not model weights                 |
-| Package            | Installed ESM/CommonJS/CLI/native smoke on Linux Node 20.20 and 24.22             |
-| Portability        | Public-registry fresh-cache checkout install and full checks                      |
-| Platforms          | Linux verified here; macOS/Windows GitHub checks configured, not claimed executed |
+| Area                                | Actual evidence                                                                   |
+| ----------------------------------- | --------------------------------------------------------------------------------- |
+| Native processing                   | Real FFmpeg/FFprobe media tests                                                   |
+| OpenAI, Gemini, Anthropic contracts | Mocked transport, not paid live accuracy                                          |
+| Ollama/whisper.cpp                  | Real loopback HTTP fixtures, not actual model inference                           |
+| Qwen/Nemotron                       | Mocked contracts; live routes/schema require verification                         |
+| Model lifecycle                     | Tiny controlled artifact with size/hash checks, not model weights                 |
+| Package                             | Installed ESM/CommonJS/CLI/native smoke on Linux Node 20.20 and 24.22             |
+| Portability                         | Public-registry fresh-cache checkout install and full checks                      |
+| Platforms                           | Linux verified here; macOS/Windows GitHub checks configured, not claimed executed |
 
 All dependency tarballs in the lockfile must use public npm URLs. After managed dependency updates, `npm run lockfile:portable` checks each pinned version/integrity against public metadata before normalizing only download addresses. `lockfile:check` catches internal mirrors before CI installation. This does not bypass blocked dependency checks.
 
@@ -542,7 +580,15 @@ Requirements are covered by native media tests; adapter/HTTP contract tests; mod
 
 The repository's **Explicit npm release** GitHub Actions workflow uses the repository secret named `NPM_TOKEN`. Never place its value in source or paste it into chat.
 
-This isolated task copy does not publish. After changes are merged, the manual workflow requires `PUBLISH` and the exact package version, uses the `npm-release` environment, validates the owner-approved license, checks npm authentication, runs quality/package checks, and then publishes. Configure required reviewers for that environment in GitHub if review approval is needed; YAML cannot create that policy itself.
+To publish, either run the manual workflow with `PUBLISH` and the exact package
+version, or deliberately push a matching version tag such as `v0.1.0-alpha.1`.
+The release commit must belong to the default branch, and the version tag must
+match the package version exactly. The workflow uses the `npm-release`
+environment, validates the owner-approved license, checks npm authentication,
+runs quality/package checks, and then publishes. Configure required reviewers
+for that environment in GitHub if review approval is needed; YAML cannot create
+that policy itself. Missing npm credentials or package-name permissions block
+publication rather than reporting success.
 
 Prerelease versions publish under the `alpha` dist-tag, not `latest`. Stable releases additionally require explicit stable-release approval in `release-readiness.json`. npm itself enforces whether the token may publish this package name; adding a secret alone is not proof of that permission.
 

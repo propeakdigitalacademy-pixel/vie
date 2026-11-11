@@ -13,6 +13,10 @@ export {
   ProviderRegistry,
 } from "./providers/builtin.js";
 export type { APIOptions, SharedOptions } from "./providers/builtin.js";
+export {
+  geminiVision,
+  anthropicVision,
+} from "./providers/additional-vision.js";
 export { ModelManager, runtimeStatus } from "./local/models.js";
 export type { ModelManifest } from "./local/models.js";
 export { detectBinaries } from "./media/process.js";

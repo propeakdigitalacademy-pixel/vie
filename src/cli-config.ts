@@ -7,6 +7,10 @@ import {
   whisperCpp,
 } from "./providers/builtin.js";
 import { customHTTP } from "./providers/http.js";
+import {
+  geminiVision,
+  anthropicVision,
+} from "./providers/additional-vision.js";
 import { VIEError } from "./errors.js";
 /** Data-only JSON config. No evaluation of JavaScript or shell commands. */
 export async function loadConfig(path?: string): Promise<VIEConfig> {
@@ -33,6 +37,10 @@ export async function loadConfig(path?: string): Promise<VIEConfig> {
             return openAIVision(options);
           case "openai-transcription":
             return openAITranscription(options);
+          case "gemini":
+            return geminiVision(options);
+          case "anthropic":
+            return anthropicVision(options);
           case "ollama":
             return ollamaVision(options);
           case "whisper.cpp":

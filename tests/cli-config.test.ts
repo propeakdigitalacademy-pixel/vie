@@ -20,6 +20,20 @@ describe("data-only CLI configuration", () => {
       );
       const config = configure(await loadConfig(file));
       expect(config.vision.providers[0]!.location).toBe("local");
+      for (const adapter of ["gemini", "anthropic"]) {
+        await writeFile(
+          file,
+          JSON.stringify({
+            actions: true,
+            vision: {
+              providers: [{ adapter, model: "explicit", temporal: true }],
+            },
+          }),
+        );
+        const loaded = configure(await loadConfig(file));
+        expect(loaded.vision.providers[0]!.capabilities.activities).toBe(true);
+        expect(loaded.vision.providers[0]!.location).toBe("external");
+      }
       await writeFile(
         file,
         JSON.stringify({ vision: { providers: [{ adapter: "unknown" }] } }),

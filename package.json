@@ -2,6 +2,14 @@
   "name": "vie-engine",
   "version": "0.1.0-alpha.1",
   "description": "Local-first evidence-backed video intelligence SDK and CLI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/propeakdigitalacademy-pixel/vie.git"
+  },
+  "homepage": "https://github.com/propeakdigitalacademy-pixel/vie#readme",
+  "bugs": {
+    "url": "https://github.com/propeakdigitalacademy-pixel/vie/issues"
+  },
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "private": false,
@@ -51,7 +59,7 @@
     "lint": "eslint src tests scripts",
     "format": "prettier --write src tests scripts examples *.json *.md",
     "format:check": "prettier --check src tests scripts examples *.json *.md",
-    "test": "vitest run",
+    "test": "vitest run --maxWorkers=1",
     "evaluate": "tsx scripts/evaluate.ts",
     "smoke": "node scripts/smoke.mjs",
     "check": "npm run lockfile:check && npm run typecheck && npm run lint && npm test && npm run build && npm run smoke",

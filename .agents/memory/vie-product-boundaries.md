@@ -15,6 +15,12 @@ The user wants improvements beyond the master specification and a top-tier produ
 
 **How to apply:** Prioritize measurable accuracy, evidence and provenance, honest limitations, and real working behavior over impressive unsupported claims.
 
+The delivery targets are the user's GitHub repository and npm, not a Replit-hosted app.
+
+**Why:** The user explicitly corrected this distinction and asked for the files to be available on GitHub and the package released to npm.
+
+**How to apply:** Push verified changes when the user asks for GitHub delivery. Prepare and execute only authorized npm releases; do not substitute a Replit web deployment for package publication.
+
 The user said: "just two .MD files is enough let readme explain everything how to use it and so on plus code snippets" and "qwen-nemotron.md file isn't needed".
 
 **Why:** The user asked to reduce the scattered project documentation.

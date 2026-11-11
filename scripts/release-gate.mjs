@@ -23,10 +23,11 @@ if (!versionMatch)
 const prerelease = !!versionMatch?.[1];
 if (!prerelease && !ready.stableReleaseApproved)
   failures.push("stable release evidence has not been approved");
-if (
-  !process.env.REQUESTED_VERSION ||
-  p.version !== process.env.REQUESTED_VERSION
-)
+const requested =
+  process.env.RELEASE_EVENT === "push"
+    ? process.env.REQUESTED_VERSION?.replace(/^v/, "")
+    : process.env.REQUESTED_VERSION;
+if (!requested || p.version !== requested)
   failures.push("requested version must equal package version");
 if (failures.length)
   throw new Error(`Publication blocked: ${failures.join("; ")}`);
@@ -38,6 +39,6 @@ console.log(
     version: p.version,
     tag,
     licenseApproved: true,
-    note: "Publication requires the manual workflow and npm publishing permission; this check does not publish.",
+    note: "Publication requires an explicit workflow request or version tag and npm publishing permission; this check does not publish.",
   }),
 );

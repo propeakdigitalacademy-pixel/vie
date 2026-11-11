@@ -2,6 +2,10 @@
 
 ## 0.1.0-alpha.1 — unreleased
 
+- Added Gemini and Anthropic vision adapters with inline media, structured output, and explicit model selection.
+- Added opt-in timestamped multi-frame activity inference for OpenAI, Ollama, Gemini, and Anthropic, with single-still and evidence safeguards.
+- Added exact-version Git tag releases to npm, verified repository metadata, and portable line endings for Windows checks.
+
 - Added standalone ESM/CommonJS SDK and executable CLI.
 - Added bounded local ingestion, metadata, audio, frame sampling and native scene detection.
 - Added explicit provider contracts, custom HTTP mappings, OpenAI and local runtime adapters.

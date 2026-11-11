@@ -1,6 +1,7 @@
 import type { Provider } from "../types.js";
 import { customHTTP, asTranscript, type HTTPConfig, getPath } from "./http.js";
 import { VIEError } from "../errors.js";
+import { visualContent, visualPrompt } from "./visual-output.js";
 export interface APIOptions {
   model: string;
   apiKey?: string;
@@ -9,21 +10,8 @@ export interface APIOptions {
   timeoutMs?: number;
   cacheIdentity?: string;
   structured?: boolean;
-}
-const structuredPrompt =
-  "Return only JSON with a description string, optional objects array of {label}, optional text array of {text}, optional environment and composition strings. Describe only visible evidence. Do not report actions or movement from still images. Do not invent confidence values.";
-function visualContent(value: unknown, structured?: boolean) {
-  if (typeof value !== "string")
-    throw new VIEError("MALFORMED", "Missing vision description");
-  if (!structured) return { description: value };
-  try {
-    return JSON.parse(value);
-  } catch {
-    throw new VIEError(
-      "MALFORMED",
-      "Vision provider did not return structured JSON",
-    );
-  }
+  /** Enable ordered multi-frame comparisons only for a capable model. */
+  temporal?: boolean;
 }
 /** Model must be explicitly selected. Timestamp support is not assumed for arbitrary models. */
 export function openAITranscription(o: APIOptions): Provider {
@@ -45,6 +33,7 @@ export function openAITranscription(o: APIOptions): Provider {
   });
 }
 export function openAIVision(o: APIOptions): Provider {
+  const structured = !!(o.structured || o.temporal);
   return customHTTP({
     id: o.id ?? "openai-vision",
     model: o.model,
@@ -52,25 +41,24 @@ export function openAIVision(o: APIOptions): Provider {
     capabilities: {
       images: true,
       multipleImages: true,
-      ocr: !!o.structured,
-      objects: !!o.structured,
+      ocr: structured,
+      objects: structured,
+      activities: o.temporal ? true : undefined,
       imageFormats: ["jpeg"],
     },
     endpoint: o.endpoint ?? "https://api.openai.com/v1/chat/completions",
     bearer: o.apiKey,
     media: "data-url",
-    build: (v) => ({
+    build: (v, request) => ({
       model: v.model,
-      ...(o.structured ? { response_format: { type: "json_object" } } : {}),
+      ...(structured ? { response_format: { type: "json_object" } } : {}),
       messages: [
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: o.structured
-                ? `${v.prompt}\n${structuredPrompt}`
-                : v.prompt,
+              text: visualPrompt(o, request),
             },
             ...(v.images as string[]).map((url) => ({
               type: "image_url",
@@ -81,12 +69,13 @@ export function openAIVision(o: APIOptions): Provider {
       ],
     }),
     transform: (r) =>
-      visualContent(getPath(r, "choices.0.message.content"), o.structured),
+      visualContent(getPath(r, "choices.0.message.content"), structured),
     timeoutMs: o.timeoutMs,
     cacheIdentity: o.cacheIdentity,
   });
 }
 export function ollamaVision(o: APIOptions): Provider {
+  const structured = !!(o.structured || o.temporal);
   return customHTTP({
     id: o.id ?? "ollama",
     model: o.model,
@@ -95,21 +84,22 @@ export function ollamaVision(o: APIOptions): Provider {
     capabilities: {
       images: true,
       multipleImages: true,
-      ocr: !!o.structured,
-      objects: !!o.structured,
+      ocr: structured,
+      objects: structured,
+      activities: o.temporal ? true : undefined,
       imageFormats: ["jpeg"],
     },
     endpoint: o.endpoint ?? "http://127.0.0.1:11434/api/generate",
     bearer: o.apiKey,
     media: "base64",
-    build: (v) => ({
+    build: (v, request) => ({
       model: v.model,
       images: v.images,
-      prompt: o.structured ? `${v.prompt}\n${structuredPrompt}` : v.prompt,
+      prompt: visualPrompt(o, request),
       stream: false,
-      ...(o.structured ? { format: "json" } : {}),
+      ...(structured ? { format: "json" } : {}),
     }),
-    transform: (r) => visualContent(getPath(r, "response"), o.structured),
+    transform: (r) => visualContent(getPath(r, "response"), structured),
     timeoutMs: o.timeoutMs,
     cacheIdentity: o.cacheIdentity,
   });
@@ -130,6 +120,7 @@ export function whisperCpp(
     body: { response_format: "verbose_json" },
     requestMapping: { file: "file", language: "language" },
     transform: asTranscript,
+    timeoutMs: o.timeoutMs,
     cacheIdentity: o.cacheIdentity,
   });
 }
