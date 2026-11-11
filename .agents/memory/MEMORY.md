@@ -1,0 +1,1 @@
+- [VIE product boundaries](vie-product-boundaries.md) — standalone video-intelligence library; evidence extraction, not an editor or mandatory reasoning service.
