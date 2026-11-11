@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-alpha.2 — release candidate
+
+- Publish the exact tested archive and require public-registry version, checksum,
+  and downloaded-byte verification before reporting a successful release.
+- Avoid duplicate cross-platform check runs for release tags.
+
 ## 0.1.0-alpha.1 — unreleased
 
 - Added Gemini and Anthropic vision adapters with inline media, structured output, and explicit model selection.

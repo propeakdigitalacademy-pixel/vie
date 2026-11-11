@@ -51,7 +51,13 @@ jobs:
       - run: npm run check
       - run: npm run format:check
       - run: npm pack --dry-run
+      - name: Pack the exact tested archive
+        run: npm pack --json > release-package.json
       - name: Publish only after explicit request and environment approval
-        run: npm publish --access public --tag "${{ steps.release.outputs.tag }}"
+        run: |
+          ARCHIVE="$(node -p "JSON.parse(require('fs').readFileSync('release-package.json','utf8'))[0].filename")"
+          npm publish "$ARCHIVE" --access public --tag "${{ steps.release.outputs.tag }}" --registry=https://registry.npmjs.org --dry-run=false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Verify public version and exact archive integrity
+        run: npm exec -- tsx scripts/verify-published.ts release-package.json

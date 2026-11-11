@@ -1,6 +1,6 @@
 {
   "name": "vie-engine",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Local-first evidence-backed video intelligence SDK and CLI",
   "repository": {
     "type": "git",
