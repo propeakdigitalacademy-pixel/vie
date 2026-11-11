@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+/generated-artifacts/
+.vie-cache/
+*.tgz
+.env
