@@ -42,3 +42,7 @@ args = "npm run evaluate"
 
 [workflows.workflow.metadata]
 isValidation = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 180000
